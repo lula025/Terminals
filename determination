@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <windows.h>
+void print(double **a,int n,int s){
+    for(int j=0; j<n;j++){
+        if(j==n/2&&s==(-1)){
+            printf("-|");
+        }
+        else
+            printf(" |");
+        for(int k=0;k<n;k++){
+            printf("%12.6lf ",a[j][k]);
+        }
+        printf("| \n");
+    }
+    printf("\n\n");
+    // sleep(1) ;
+    Sleep(500);
+}
+
+
+double det(double **a,int n) {
+    int s=1;
+    for(int i=0;i<n;i++){
+        int zero_elem = 1;
+        if (a[i][i] == 0) {
+            for (int j = i + 1; j < n; j++) {
+                if (a[j][i] != 0) {
+                    for (int k = i; k < n; k++) {
+                        double temp = a[j][k];
+                        a[j][k] = a[i][k];
+                        a[i][k] = temp;
+                    }
+                    zero_elem = 0;
+                    s*=(-1);
+                    break;
+                }
+            }
+        } else {
+            zero_elem = 0;
+        }
+        if(zero_elem){
+            return 0 ;
+
+        }
+        for (int j=i+1;j<n;j++){
+            if(a[j][i]!=0){
+
+                double temp=a[j][i]/a[i][i];
+                for(int k=i;k<n;k++){
+                    a[j][k]-=a[i][k]*temp;
+                }
+
+            }
+
+        }
+        print(a,n,s);
+    }
+
+   double det=1.0;
+   for(int i=0;i<n;i++){
+       det*=a[i][i];
+   }
+   return s*det;
+}
+
+
+int main(){
+    int n;
+    scanf("%d",&n);
+    
+    double **a=(double **)malloc(n*sizeof(double*));
+    for(int i=0;i<n;i++){
+        a[i]=(double*)malloc(n*sizeof(double));
+    }
+    
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            scanf("%lf",&a[i][j]);
+        }
+    }
+
+    print(a,n,1);
+    printf("det is equal to %lf",det(a,n));
+    
+    for(int i=0;i<n;i++){
+        free(a[i]);
+    }
+    free(a);
+    
+    return 0;
+}
