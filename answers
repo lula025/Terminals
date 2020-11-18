@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+void reverse(double **a,double **a_1, int n) {
+    for(int i=0;i<n;i++){
+        if (a[i][i] == 0) {
+            for (int j = i + 1; j < n; j++) {
+                if (a[j][i] != 0) {
+                    for (int k = i; k < n; k++) {
+                        double temp = a[j][k];
+                        a[j][k] = a[i][k];
+                        a[i][k] = temp;
+                        temp = a_1[j][k];
+                        a_1[j][k] = a_1[i][k];
+                        a_1[i][k] = temp;
+                    }
+                    break;
+                }
+            }
+        }
+
+
+        for (int j=0;j<n;j++){
+            if(a[j][i] !=0 && j != i){
+                double temp=a[j][i]/a[i][i];
+                for(int k=0;k<n;k++){
+                    a[j][k]-=a[i][k]*temp;
+                    a_1[j][k]-=a_1[i][k]*temp;
+                }
+
+            }
+        }
+
+    }
+}
+void multi( double **a,double **a_1,int n ){
+    for (int i=0;i<n;i++){
+        double x=1/a[i][i];
+        for (int j=0;j<n;j++){
+            a_1[i][j]*=x;
+
+        }
+    }
+
+}
+void answer(double **a_1, double *b, int n){
+    for(int i =0;i<n;i++){
+        double d=0;
+        for( int j=0; j<n;j++){
+            d+=a_1[i][j]*b[j];
+        }
+        printf("x_%d = %lf\n",i,d);
+    }
+}
+int main(){
+    int n;
+    scanf("%d",&n);
+    double **a=(double**)calloc(n,sizeof(double*));
+    double *b=(double*)calloc(n,sizeof(double));
+    double **a_1=(double**)calloc(n,sizeof(double*));
+    for (int i=0;i<n;i++){
+        *(a+i)=(double*)calloc(n,sizeof(double));
+        *(a_1+i)=(double*)calloc(n,sizeof(double));
+        a_1[i][i]=1;
+        for(int j =0;j<n;j++){
+            scanf("%lf",&a[i][j]);
+        }
+        scanf("%lf",&b[i]);
+    }
+
+
+reverse(a,a_1,n);
+multi(a,a_1,n);
+answer(a_1,b,n);
+}
